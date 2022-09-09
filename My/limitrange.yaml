@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: LimitRange #object type (resource limits by default for namespace)
+metadata: #metadata
+  name: demo-limitrange #name
+spec: #object specification
+  limits: #limits
+    - default: #by default
+        cpu: "500m"
+        memory: "256Mi"
+      defaultRequest: #resource limits for containers in namespace if requests and limits not exist
+        cpu: "200"
+        memory: "128Mi"
+      type: Container

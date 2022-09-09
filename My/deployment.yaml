@@ -1,0 +1,68 @@
+apiVersion: app/v1 #api version
+kind: Deployment #object type (deployment)
+metadata: #metadata
+  name: hello #name
+  annotations: #annotations for best identity of objects
+    example.com/owner: "Customer App Team"
+  labels: #labels
+    app: hello
+spec: #object specifications
+  replicas: 2 #number of replicas
+  selector: #selector for app selecting
+    matchLabels:
+      app: hello
+  template: #template description
+    metadata: #metadata
+      labels: #labels
+        app: hello
+    spec: #container specifications
+      affinity: #instructions for pod scheduling only with(or without) matching
+        nodeAffinity:
+          preferredDuringSchedulingIgnoreDuringExecution:
+            - preference: #"soft" affinity (prefer with this matching)
+                matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: Exists
+                  - key: disktype
+                    operator: In
+                    values:
+                    - ssd
+              weight: 100
+              nodeSelectorTerms: #"hard" affinity (only it with this matching)
+                - matchExpressions:
+                  - key: cloud.google.com/gke-preemptible
+                    operator: DoesNotExists
+                  - key: disktype
+                    operator: In
+                    values:
+                    - ssd
+      containers:
+        - name: demo #name
+          image: cloudnatived/demo:hello #image
+          ports:
+            - containerPort: 8888 #port of container
+            resources:
+              requests: #request min resources
+                memory: "10Mi"
+                cpu: "100m"
+              limits: #limit max resources
+                memory: "20Mi"
+                cpu: "250m"
+            livenessProbe: #check working
+              httpGet: #check type
+                path: / #path
+                port: 8888 #port
+              tcpSocket: #check type
+                port: 8888 #port
+              initialDelaySeconds: 5 #delay for first check
+              periodSeconds: 3 # period of checks
+            readinessProbe: #check ready
+              exec: #check type
+                command:
+                  - cat
+                  - /tmp/healthy
+              httpGet: #check type
+                path: /healthz #path
+                port: 8888 #port
+              initialDelaySeconds: 5 #delay for first check
+              periodSeconds: 3 # period of checks

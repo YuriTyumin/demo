@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ResourceQuota #object type (resource limits for namespace)
+metadata: #metadata
+  name: demo-resourcequota #name
+spec: #object specification
+  hard: #hard limit
+    pods: "100" #value
