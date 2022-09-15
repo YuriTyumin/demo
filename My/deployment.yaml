@@ -4,6 +4,9 @@ metadata: #metadata
   name: hello #name
   annotations: #annotations for best identity of objects
     example.com/owner: "Customer App Team"
+    kube-monkey/mtbf: 2 #annotation for kube-monkey (mean time between failures - 2 days)
+    kube-monkey/kill-mode: "random-max-percent" #annotation for kube-monkey (max number(%) of killed pods)
+    kube-monkey/kill-value: 50 #annotation for kube-monkey (50% of pods will killed)
   labels: #labels
     app: hello
 spec: #object specifications
