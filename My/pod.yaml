@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: pod
+...
+spec:
+  ImagePullSecrets: # secrets for pulling images
+  - name: registry-creds # name of Secret object. You need to create it secret object previously in Secret object
+  restartPolicy: OnFailure\Aways\Never # restart policy
+  serviceAccountName: deploy_test # some specific account name for some specific requirement (if needed)
+  volumes: # volumes in pod
+  - name: cache-volume
+    emptyDir: {} # volume type for temporary storage
+  - name: data-volume
+    persistentVolumeClaim: # volume type for continues storage
+      claimName: data-pvc
+  containers:
+  - name: demo
+    image: cloudnatived/demo:hello
+  volumeMounts: # volume mounting
+  - mountPath: /cache # mount point
+    name: cache-volume # name of volume for mounting
+  - mountPath: /data
+    name: data-volume

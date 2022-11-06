@@ -1,4 +1,4 @@
-apiVersion: app/v1 #api version
+apiVersion: apps/v1 #api version
 kind: Deployment #object type (deployment)
 metadata: #metadata
   name: hello #name
@@ -10,6 +10,10 @@ metadata: #metadata
   labels: #labels
     app: hello
 spec: #object specifications
+  securityContext: # security context for pod level
+    runAsUser: 1000 # run container as _UserName_: UID
+    runAsNonRoot: true # block starting container from root privilege
+    allowPrivilegeEscalation: false # privilege escalation
   replicas: 2 #number of replicas
   selector: #selector for app selecting
     matchLabels:
@@ -42,8 +46,20 @@ spec: #object specifications
       containers:
         - name: demo #name
           image: cloudnatived/demo:hello #image
+          imagePullPolicy: IfNotPresent #image pull policy from registry
+          securityContext: # security context for container level
+            runAsUser: 1000 # run container as _UserName_: UID
+            runAsNonRoot: true # block starting container from root privilege
+            readOnlyRootFilesystem: true # read only FS
+            allowPrivilegeEscalation: false # privilege escalation
+            capabilities: # mandats policy
+              drop: ["CHOWN", "NET_RAW", "SETPCAP"] # drop mandats "CHOWN", "NET_RAW", "SETPCAP"
+              add: ["NET_ADMIN"] # add mandat "NET_ADMIN"
+          env: # environment variables
+          - name: test_message
+            value: "Hello from the environment"
           ports:
-            - containerPort: 8888 #port of container
+          - containerPort: 8888 #port of container
             resources:
               requests: #request min resources
                 memory: "10Mi"

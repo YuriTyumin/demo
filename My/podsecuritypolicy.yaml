@@ -1,0 +1,16 @@
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy # security policy type for whole cluster
+metadata:
+  name: example
+spec: # some required settings
+  privileged: false
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  RunAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+    - *

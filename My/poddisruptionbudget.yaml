@@ -1,10 +1,10 @@
-apiVersion: policy/v1beta
+apiVersion: policy/v1
 kind: PodDisruptionBudget #object type (number pod limits for available\unavailable pods)
 metadata: #metadata
   name: demo-pdb #name
-  spec: #object description
-    minAvailable: 3 #min number of working pods
-    maxUnavailable: 10% #max number of disrupted pods
-    selector: #selector
-      matchLabels: #label for matching
-        app: demo
+spec: #object description
+  minAvailable: 3 #min number of working pods
+  maxUnavailable: 10% #max number of disrupted pods
+  selector: #selector
+    matchLabels: #label for matching
+      app: demo
