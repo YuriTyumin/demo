@@ -15,7 +15,7 @@ spec: #object specifications
     runAsNonRoot: true # block starting container from root privilege
     allowPrivilegeEscalation: false # privilege escalation
   replicas: 2 #number of replicas
-  selector: #selector for app selecting
+  selector: #selector for app selecting (matching)
     matchLabels:
       app: hello
   template: #template description
